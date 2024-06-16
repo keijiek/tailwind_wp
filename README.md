@@ -3,24 +3,37 @@
 ## 前提
 
 - インストールされたばかりの正常に動いているワードプレス。
-- そこに自作テーマを作っていく。
+- そこに、Tailwind を用いた自作テーマの基礎部分を作っていく。
+
+### なぜ tailwind を使うのか
+
+- 単純には「費用v.s.効果」を考えた結果。
+- Bootstrap は、用意されたコンポーネントを並べるだけで作れるデザインなら良い選択肢だが、そうでないなら導入時と導入後のコストの大きさがデメリット。
+  - Bootstrap をカスタマイズするには、vite, postcss, autoprefixer 等のツールの知識が必要。Tailwind は tailwindcss を入れるだけで使える。カスタマイズはコンフィグファイルに書く。
+  - 不足するスタイルの追加を、手書きの css に依存するなら、css設計の知識が必須。そうでない場合、手書きcssのクソさ加減により保守コストが増大。Tailwind は手書き css に依存せずにすむ。
+  - プラグインにより Bootstrap のコンポーネントのような利便性も獲得できる。
+
+---
 
 ## Tailwind css の導入
 
 ```bash
 npm init -y
-# 本体 + 4×公式プラグイン
+
+# 本体 + 4×公式プラグイン。
 npm i -D tailwindcss @tailwindcss/typography @tailwindcss/forms @tailwindcss/aspect-ratio @tailwindcss/line-clamp
+
 # tailwind.config.js 生成
-npx tailwindcss init
+npx tailwindcss init --esm
 ```
 
 ### tailwind.config.js を編集
 
 ```javascript
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+default export {
   // tailwind は、下記のパスのファイルに書かれたクラス名を収集して本番用の css ファイルをビルドする。
+  // 下記の場合、templates ディレクトリ内の php ファイルに限定。プロジェクト全体の php ファイルを対象にすることは避けてみた。
   content: [
     "./templates/**/*.php"
   ],
@@ -76,7 +89,11 @@ npm run tw
 ### .vscode/sftp.json の記述
 
 - vscode の sftp 拡張を使って開発する場合、tailwind がファイルをビルドした瞬間に、出力されたファイルをアップロードする設定を書いておくと便利。
-- 下記は ftp(21) の場合の設定。詳しくは[公式リポジトリ](https://github.com/Natizyskunk/vscode-sftp)を参照。
+- 下記は ftp(21) の場合の設定。
+
+1. VSCpde の `CTRL + SHIFT + P` に `SFTP:Config` を入力。
+1. 設定項目の意味は[公式リポジトリ](https://github.com/Natizyskunk/vscode-sftp)を参照。
+1. とりわけ、`watcher` オブジェクトの設定が、ファイルの出力を監視してアップロードする機能の挙動。
 
 ```json
 {
@@ -96,10 +113,9 @@ npm run tw
         "ignoreExisting": false,
         "update": false
     },
-    // この watcher オブジェクトが重要。
     "watcher": {
-        "files": "assets/dist/**/*",// 監視対象。このパスで生成されるファイルが対象となる。
-        "autoUpload": true, // 上記ファイルを自動アップロードする機能。もちろん true
+        "files": "assets/dist/**/*",
+        "autoUpload": true,
         "autoDelete": false
     },
     "ignore": [
@@ -117,9 +133,11 @@ npm run tw
 
 ## prism.js の導入
 
+コードブロックのシンタックスハイライト機能をウェブサイトに追加するため。
+
 [prism.js](https://prismjs.com/) の「Download」ページで求める機能を設定し、js と css ファイルをダウンロード。
 
-ダウンロードしたファイルを任意の場所に置き、wordpres に enqueue させる。
+ダウンロードしたファイルを任意の場所に置き、wordpres に enqueue させる。その際、js ファイルは `</body>`直前に置くので、wp_enqueue_script の第五引数を true に。
 
 設定を変えたい場合、設定とダウンロードをやりなおす。
 
