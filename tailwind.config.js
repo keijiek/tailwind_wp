@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports =  {
   content: ["./templates/**/*.php"],
   theme: {
     extend: {},
@@ -17,5 +17,11 @@ export default {
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
+    require('daisyui'),
   ],
+  darkMode: ['class', '[data-theme="dark"]'],
+  daisyui: {
+    themes: ['retro', 'synthwave'],
+    darkTheme: false,
+  }
 }

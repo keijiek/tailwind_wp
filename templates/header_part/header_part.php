@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?> data-theme="dark">
 <?php
 require_once(__DIR__ . '/_el_head.php');
 ?>
@@ -8,4 +8,4 @@ require_once(__DIR__ . '/_el_head.php');
   <?php
   require_once(__DIR__ . '/_el_header.php');
   ?>
-  <main class="container mx-auto">
+  <main class="container mx-auto py-4 px-4 lg:px-0">

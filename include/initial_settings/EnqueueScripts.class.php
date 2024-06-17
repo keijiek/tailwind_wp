@@ -2,29 +2,33 @@
 
 namespace initial_settings;
 
+/**
+ * css / js を enqueue
+ */
 class EnqueueScripts
 {
-  const TAILWIND = 'tailwind';
-  const ALPINE = 'alpine';
-  const PRISM = 'prism';
+  private const TAILWIND = 'tailwind';
+  private const ALPINE = 'alpine';
+  private const JS_ENTRY = 'entry_point';
+  private const PRISM = 'prism';
   private $is_develop;
 
-  public function __construct(bool $is_develop = \false)
+  function __construct(bool $is_develop = \false)
   {
     $this->is_develop = $is_develop;
     add_action('wp_enqueue_scripts', [&$this, 'enqueue_scripts']);
   }
 
-  public function enqueue_scripts()
+  function enqueue_scripts()
   {
     $this->enqueue_something(self::TAILWIND, 'assets/dist/css/tailwind.css', []);
-    $this->enqueue_something(self::ALPINE, 'assets/dist/js/index.js', []);
+    $this->enqueue_something(self::JS_ENTRY, 'assets/dist/js/index.js', []);
     $this->enqueue_prism();
   }
 
   private function enqueue_prism() {
     $this->enqueue_something(self::PRISM, 'assets/prism/prism.css', [self::TAILWIND]);
-    $this->enqueue_something(self::PRISM, 'assets/prism/prism.js', [self::ALPINE], true);
+    $this->enqueue_something(self::PRISM, 'assets/prism/prism.js', [self::JS_ENTRY], true);
   }
 
   private function enqueue_something(string $handler, string $file_path, array $depends = [], bool $in_footer = \false)

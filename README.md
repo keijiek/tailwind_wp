@@ -20,18 +20,24 @@
 ```bash
 npm init -y
 
-# 本体 + 4×公式プラグイン。
-npm i -D tailwindcss @tailwindcss/typography @tailwindcss/forms @tailwindcss/aspect-ratio @tailwindcss/line-clamp
+# 本体
+npm i -D tailwindcss
+
+# 公式プラグイン
+npm i -D @tailwindcss/typography @tailwindcss/forms @tailwindcss/aspect-ratio @tailwindcss/line-clamp
+
+# daisyui : コンポーネントを導入したい場合
+npm i -D daisyui@latest
 
 # tailwind.config.js 生成
-npx tailwindcss init --esm
+npx tailwindcss init
 ```
 
 ### tailwind.config.js を編集
 
 ```javascript
 /** @type {import('tailwindcss').Config} */
-default export {
+module.exports =  {
   // tailwind は、下記のパスのファイルに書かれたクラス名を収集して本番用の css ファイルをビルドする。
   // 下記の場合、templates ディレクトリ内の php ファイルに限定。プロジェクト全体の php ファイルを対象にすることは避けてみた。
   content: [
@@ -50,7 +56,13 @@ default export {
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/line-clamp'),
+    require('daisyui'),
   ],
+  // darkMode: ['class', '[data-theme="synthwave"]'],
+  daisyui: {
+    themes: ['retro', 'synthwave'],
+    darkTheme: false,
+  }
 }
 ```
 
@@ -131,6 +143,54 @@ npm run tw
 
 ---
 
+## js をバンドルする方法(vite.js)の導入(optional)
+
+- 導入した node_modules を import するエントリーポイントを用意。
+-
+
+```bash
+npm i -D vite
+```
+
+### vite.config.mjs
+
+敢えて rollupOption オブジェクトを作り、エントリーポイントを変更、出力パスを固定。
+
+この場合、`assets/src/index.js` がエントリーポイント。
+
+そこを起点に `../dist/js` が出力ディレクトリ。
+
+``
+
+```mjs
+import { defineConfig } from "vite";
+import path from "path";
+
+export default defineConfig({
+  root: path.resolve(__dirname, "assets", "src"),
+  build: {
+    outDir: "../dist/js",
+    emptyOutDir: true,
+    minify: true,
+    rollupOptions: {
+      input: {
+        index: path.resolve(__dirname, "assets", "src", "index.js"),
+      },
+      output: {
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`,
+      },
+      watch: {
+        include: path.resolve(__dirname, "assets", "src", "index.js"),
+      }
+    },
+  }
+});
+```
+
+---
+
 ## prism.js の導入
 
 コードブロックのシンタックスハイライト機能をウェブサイトに追加するため。
@@ -140,11 +200,3 @@ npm run tw
 ダウンロードしたファイルを任意の場所に置き、wordpres に enqueue させる。その際、js ファイルは `</body>`直前に置くので、wp_enqueue_script の第五引数を true に。
 
 設定を変えたい場合、設定とダウンロードをやりなおす。
-
----
-
-## js をバンドルする方法(vite.js)の導入(optional)
-
-- wordpress に tailwind css を導入する、という観点からは必須の工程ではない。
-- 使いたい node パッケージを import するため。(今回は alpine.js を import するため)
-

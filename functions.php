@@ -4,18 +4,18 @@
  */
 // パス用の定数
 const TPL_DIR = 'templates';
-const PGS_DIR = TPL_DIR.'/pages';
+const VIEWS_DIR = TPL_DIR. '/views';
 const HEADER_TPL = TPL_DIR . '/header_part/header_part';
 const FOOTER_TPL = TPL_DIR . '/footer_part/footer_part';
-const HOME_TPL = PGS_DIR . '/home';
-const PAGE_TPL = PGS_DIR . '/page';
-const POST_TPL = PGS_DIR . '/post';
-const NOT_FOUND_TPL =  PGS_DIR. '/not_found';
+const HOME_TPL = VIEWS_DIR . '/home';
+const PAGE_TPL = VIEWS_DIR . '/page';
+const POST_TPL = VIEWS_DIR . '/post';
+const NOT_FOUND_TPL =  VIEWS_DIR. '/not_found';
 
 /**
  * カスタムポストのスラグ
  */
-//
+
 
 /** ************************************************************
  * requires

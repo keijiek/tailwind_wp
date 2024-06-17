@@ -1,15 +1,17 @@
 <?php
-
 namespace initial_settings;
 
+/**
+ * after_setup_theme における必須機能の活性化
+ */
 class EssentialFeaturesActivator
 {
-  public function __construct()
+  function __construct()
   {
     add_action('after_setup_theme', [&$this, 'activate_essential_features']);
   }
 
-  public function activate_essential_features()
+  function activate_essential_features()
   {
     // 【必須】: html 文字列が、第二引数に指定した箇所で html5 準拠になる。
     add_theme_support('html5', ['comment-list', 'comment-form', 'search-form', 'gallery', 'caption', 'style', 'script']);
@@ -26,4 +28,5 @@ class EssentialFeaturesActivator
     // RSS feed の追加, 今どきこれは要るのか？
     add_theme_support('automatic-feed-links');
   }
+
 }
